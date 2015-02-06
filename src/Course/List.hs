@@ -159,8 +159,8 @@ filter f x = foldRight (\a bs -> if f a then a :. bs else bs) Nil x
   List a
   -> List a
   -> List a
-(++) =
-  error "todo"
+Nil ++ y = y
+(x :. xs) ++ y = x :. (xs ++ y)
 
 infixr 5 ++
 
@@ -177,8 +177,7 @@ infixr 5 ++
 flatten ::
   List (List a)
   -> List a
-flatten =
-  error "todo"
+flatten = foldRight (++) Nil
 
 -- | Map a function then flatten to a list.
 --
@@ -194,8 +193,7 @@ flatMap ::
   (a -> List b)
   -> List a
   -> List b
-flatMap =
-  error "todo"
+flatMap f = flatten . map f
 
 -- | Flatten a list of lists to a list (again).
 -- HOWEVER, this time use the /flatMap/ function that you just wrote.
@@ -204,8 +202,7 @@ flatMap =
 flattenAgain ::
   List (List a)
   -> List a
-flattenAgain =
-  error "todo"
+flattenAgain = flatMap id
 
 -- | Convert a list of optional values to an optional list of values.
 --
@@ -232,8 +229,8 @@ flattenAgain =
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional =
-  error "todo"
+seqOptional (x :. xs) =
+    error "todo"
 
 -- | Find the first element in the list matching the predicate.
 --
