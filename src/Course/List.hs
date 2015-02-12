@@ -229,8 +229,9 @@ flattenAgain = flatMap id
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional (x :. xs) =
-    error "todo"
+seqOptional Nil = Full Nil
+seqOptional (ox :. oxs) = ox P.>>= \x -> seqOptional oxs
+                             P.>>= \xs -> P.return (x :. xs)
 
 -- | Find the first element in the list matching the predicate.
 --
@@ -252,8 +253,8 @@ find ::
   (a -> Bool)
   -> List a
   -> Optional a
-find =
-  error "todo"
+find p (x :. xs) = if p x then Full x else find p xs
+find _ Nil = Empty
 
 -- | Determine if the length of the given list is greater than 4.
 --
@@ -271,8 +272,8 @@ find =
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 =
-  error "todo"
+lengthGT4 (_ :. _ :. _ :. _ :. _ :. _) = True
+lengthGT4 _ = False
 
 -- | Reverse a list.
 --
@@ -288,8 +289,7 @@ lengthGT4 =
 reverse ::
   List a
   -> List a
-reverse =
-  error "todo"
+reverse = error "todo"
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
