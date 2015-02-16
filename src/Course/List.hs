@@ -272,8 +272,7 @@ find _ Nil = Empty
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 (_ :. _ :. _ :. _ :. _ :. _) = True
-lengthGT4 _ = False
+lengthGT4 x = if length (take (4::Int) x) == 4 then True else False
 
 -- | Reverse a list.
 --
@@ -289,7 +288,7 @@ lengthGT4 _ = False
 reverse ::
   List a
   -> List a
-reverse = error "todo"
+reverse = foldLeft (\b x -> x :. b) Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
@@ -303,8 +302,7 @@ produce ::
   (a -> a)
   -> a
   -> List a
-produce =
-  error "todo"
+produce f b = let nb = f b in b :. produce f nb
 
 -- | Do anything other than reverse a list.
 -- Is it even possible?
@@ -318,8 +316,7 @@ produce =
 notReverse ::
   List a
   -> List a
-notReverse =
-  error "todo"
+notReverse = reverse -- After banging my head to the wall for a while, I consulted to https://github.com/tonymorris/course/blob/master/src/Course/List.hs and "impossible" was the answer...
 
 ---- End of list exercises
 
