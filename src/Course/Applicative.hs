@@ -104,8 +104,8 @@ sequence ::
   Applicative f =>
   List (f a)
   -> f (List a)
-sequence =
-  error "todo"
+sequence Nil = pure Nil
+sequence (x :. xs) = (:.) <$> x <*> sequence xs
 
 -- | Replicate an effect a given number of times.
 --
@@ -128,8 +128,7 @@ replicateA ::
   Int
   -> f a
   -> f (List a)
-replicateA =
-  error "todo"
+replicateA n = sequence . replicate n
 
 -- | Filter a list with a predicate that produces an effect.
 --
@@ -156,8 +155,7 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering =
-  error "todo"
+filtering p x = error "todo"
 
 -----------------------
 -- SUPPORT LIBRARIES --
