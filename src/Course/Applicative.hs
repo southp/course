@@ -155,7 +155,10 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering p x = error "todo"
+filtering _ Nil = pure Nil
+filtering p (x :. xs) = concat <$> p x <*> filtering p xs
+    where
+        concat b = if b then (x :.) else id
 
 -----------------------
 -- SUPPORT LIBRARIES --
