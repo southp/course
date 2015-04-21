@@ -68,7 +68,7 @@ infixr 1 =<<
   f (a -> b)
   -> f a
   -> f b
-(<*>) f x = (\f' -> f' <$> x) =<< f
+(<*>) f x = (<$> x) =<< f
 
 infixl 4 <*>
 
@@ -92,7 +92,7 @@ instance Bind List where
     (a -> List b)
     -> List a
     -> List b
-  (=<<) f = flatMap f
+  (=<<) = flatMap
 
 -- | Binds a function on an Optional.
 --
@@ -112,9 +112,9 @@ instance Bind Optional where
 -- 119
 instance Bind ((->) t) where
   (=<<) ::
-    (a -> ((->) t b))
-    -> ((->) t a)
-    -> ((->) t b)
+    (a -> (->) t b)
+    -> (->) t a
+    -> (->) t b
   f =<< m = \t -> f (m t) t
 
 -- | Flattens a combined structure to a single structure.
@@ -134,7 +134,7 @@ join ::
   Bind f =>
   f (f a)
   -> f a
-join mm = (\m -> m) =<< mm
+join mm = P.id =<< mm
 
 -- | Implement a flipped version of @(=<<)@, however, use only
 -- @join@ and @(<$>)@.
@@ -162,7 +162,7 @@ infixl 1 >>=
   -> (a -> f b)
   -> a
   -> f c
-(<=<) g f a = (\b -> g b) =<< f a
+(<=<) g f a = g =<< f a
 
 infixr 1 <=<
 
