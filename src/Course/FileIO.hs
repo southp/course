@@ -65,8 +65,7 @@ main ::
 main = do
   args <- getArgs
   case args of
-    (filename :. Nil) -> do
-        run filename
+    (filename :. Nil) -> run filename
     otherwise -> putStrLn "Oops~ I can handle one and only one file."
 
 type FilePath =
@@ -97,7 +96,7 @@ getFile p = do
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles fs = void $ sequence $ (uncurry printFile) <$> fs
+printFiles fs = void $ sequence $ uncurry printFile <$> fs
 
 printFile ::
   FilePath
