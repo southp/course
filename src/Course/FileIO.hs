@@ -62,8 +62,12 @@ the contents of c
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo"
+main = do
+  args <- getArgs
+  case args of
+    (filename :. Nil) -> do
+        run filename
+    otherwise -> putStrLn "Oops~ I can handle one and only one file."
 
 type FilePath =
   Chars
@@ -72,31 +76,34 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo"
+run rootFile = do
+    (_, rootContent) <- getFile rootFile
+    let fileNames = lines rootContent
+    files <- getFiles fileNames
+    printFiles files
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo"
+getFiles fs = sequence $ getFile <$> fs
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo"
+getFile p = do
+    content <- readFile p
+    return (p, content)
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo"
+printFiles fs = void $ sequence $ (uncurry printFile) <$> fs
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo"
-
+printFile p f = do
+    putStrLn ("================ " ++ p)
+    putStrLn p
+    putStrLn f
