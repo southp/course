@@ -15,6 +15,7 @@ import Course.Applicative
 import Course.Bind
 import Course.Monad
 import qualified Data.Set as S
+import Data.Char
 
 -- $setup
 -- >>> import Test.QuickCheck.Function
@@ -197,5 +198,18 @@ distinct xs = fst $ runState (filtering p xs) S.empty
 isHappy ::
   Integer
   -> Bool
-isHappy =
-  error "todo: Course.State#isHappy"
+isHappy n = contains 1 . fst $ runState (findM p $ sqSeq n) S.empty
+    where p x = State $ \s -> (S.member x s || x == 1, S.insert x s)
+
+toDigits :: Int -> List Int
+toDigits = (map digitToInt) . listh . show
+
+square :: List Int -> List Int
+square = map (P.^2)
+
+sumSq :: List Int -> Int
+sumSq = sum . square
+
+sqSeq :: Integer -> List Integer
+sqSeq n = produce (toInteger . sumSq . toDigits . fromInteger) n
+
