@@ -121,7 +121,7 @@ get = State $ \s -> (s, s)
 put ::
   s
   -> State s ()
-put s = State $ \_ -> ((), s)
+put s = State $ const ((), s)
 
 -- | Find the first element in a `List` that satisfies a given predicate.
 -- It is possible that no element is found, hence an `Optional` result.
@@ -143,9 +143,7 @@ findM ::
   -> List a
   -> f (Optional a)
 findM _ Nil = return Empty
-findM p (x :. xs) = p x >>= \b -> case b of
-                                    True -> return (Full x)
-                                    False -> findM p xs
+findM p (x :. xs) = p x >>= \b -> if b then return (Full x) else findM p xs
 
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
@@ -202,7 +200,7 @@ isHappy n = contains 1 . fst $ runState (findM p $ sqSeq n) S.empty
     where p x = State $ \s -> (S.member x s || x == 1, S.insert x s)
 
 toDigits :: Int -> List Int
-toDigits = (map digitToInt) . listh . show
+toDigits = map digitToInt . listh . show
 
 square :: List Int -> List Int
 square = map (P.^2)
@@ -211,5 +209,5 @@ sumSq :: List Int -> Int
 sumSq = sum . square
 
 sqSeq :: Integer -> List Integer
-sqSeq n = produce (toInteger . sumSq . toDigits . fromInteger) n
+sqSeq = produce (toInteger . sumSq . toDigits . fromInteger)
 
