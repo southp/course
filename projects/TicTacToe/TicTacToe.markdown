@@ -31,9 +31,9 @@ If you choose to use Haskell, also take advantage of its superior tooling:
 
 * Build with CABAL
 * Include a `.ghci` file for convenience when developing
-  * http://haskell.org/ghc/docs/6.12.2/html/users_guide/ghci-dot-files.html
+  * https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/ghci-dot-files.html
 * API documented using Haddock
-  * [http://www.haskell.org/haddock/doc/html/index.html](http://haskell.org/ghc/docs/6.12.2/html/users_guide/ghci-dot-files.html)
+  * [http://www.haskell.org/haddock/doc/html/index.html](http://www.haskell.org/haddock/doc/html/index.html)
 * Code style examined using hlint
   * `cabal install hlint`
   * Produce a report (`--report`)
@@ -45,5 +45,8 @@ If you choose to use Haskell, also take advantage of its superior tooling:
 
 Extra-curricular
 ----------------
+* Additional constraints using the type system:
+    * If fewer than 5 moves have been played, then this guarantees that the game is still in play, and so `move` can always be immediately called.
+    * An additional function on finished games, `isDraw` that, if called on a game with fewer than 9 moves, a compile-time type-error results.
 * Write an opponent that never loses
 * Write an opponent with easy, medium, hard difficulty levels
