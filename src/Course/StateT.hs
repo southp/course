@@ -91,7 +91,8 @@ instance Monad f => Bind (StateT s f) where
     (a -> StateT s f b)
     -> StateT s f a
     -> StateT s f b
-  (=<<) mf st = StateT $ \s -> runStateT st s >>= \(a, s') -> runStateT (mf a) s'
+  (=<<) sf sa = StateT $ \s -> runStateT sa s
+                    >>= \(a, s') -> runStateT (sf a) s'
 
 instance Monad f => Monad (StateT s f) where
 
@@ -168,7 +169,7 @@ putT ::
   Monad f =>
   s
   -> StateT s f ()
-putT s = StateT $ \s -> pure ((), s)
+putT s = StateT $ const $ pure ((), s)
 
 -- | Remove all duplicate elements in a `List`.
 --
@@ -179,8 +180,8 @@ distinct' ::
   (Ord a, Num a) =>
   List a
   -> List a
-distinct' =
-  error "todo: Course.StateT#distinct'"
+distinct' xs = fst $ runState' ( filtering p xs ) S.empty
+    where p x = state' $ \s -> ( not $ S.member x s, S.insert x s )
 
 -- | Remove all duplicate elements in a `List`.
 -- However, if you see a value greater than `100` in the list,
